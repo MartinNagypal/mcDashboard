@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="./scripts/dashboard.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/dashboard.css">
+</head>
+<body>
+    <div id="header">
+        <h3>ChickenNugggetMC</h3>
+        <div id="status">
+            <span id="statusIndicator">
+                <i class="fa-solid fa-hourglass fa-lg" style="color: rgb(192, 192, 192);"></i>
+            </span>
+            <span id="statusText">checking server status...</span>
+        </div>
+    </div>
+    <div id="content">
+        <div id="actions">
+            <h2>Actions</h2>
+            <div id="actionButtons">
+                <span class="actionButton" id="startstop">
+                    <div class="actionButtonText">Start/Stop</div>
+                    <div><i class="fa-solid fa-hourglass fa-lg" id="startstopIcon" style="color: rgb(192, 192, 192);"></i></div>
+                </span>
+                <span class="actionButton">
+                    <div class="actionButtonText">Restart</div>
+                    <div><i class="fa-solid fa-rotate" style="color: var(--secondary-accent-color);"></i></div>
+                </span>
+                <span class="actionButton">
+                    <div class="actionButtonText">Backup</div>
+                    <div><i class="fa-solid fa-save" style="color: var(--secondary-accent-color);"></i></div>
+                </span>
+            </div>
+            <div id="whitelist">
+                <div>Enter username</div>
+                <input type="text" id="whitelistInput" placeholder="Username to whielist">
+                <div><i class="fa-solid fa-circle-plus fa-xl" style="color: var(--accent-color-light);"></i></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
