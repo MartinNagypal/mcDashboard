@@ -2,6 +2,7 @@ const startstop = document.getElementById("startstop");
 
 getServerStatus();
 main();
+fetchConsoleOutput();
 
 function main() {
     startstop.addEventListener("click", () => {
@@ -42,5 +43,18 @@ function getServerStatus() {
             const statusText = document.getElementById("statusText");
             statusText.textContent = "error fetching status";
             statusIdicator.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: rgb(255, 205, 86);"></i>';
+        });
+}
+
+function fetchConsoleOutput() {
+    fetch("https://n8n.martin04lel.space/webhook/getConsole")
+        .then(response => response.json())
+        .then(data => {
+            const consoleOutput = document.getElementById("consoleOutput");
+            consoleOutput.textContent = data.console;
+            console.log(data.console);
+        })
+        .catch(error => {
+            console.error("Error fetching console output:", error);
         });
 }

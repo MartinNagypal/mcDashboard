@@ -18,7 +18,7 @@
             <span id="statusText">checking server status...</span>
         </div>
     </div>
-    <div id="content">
+    <div class="content">
         <div id="actions">
             <h2>Actions</h2>
             <div id="actionButtons">
@@ -37,10 +37,20 @@
             </div>
             <div id="whitelist">
                 <div>Enter username</div>
-                <input type="text" id="whitelistInput" placeholder="Username to whielist">
+                <input type="text" class="inputField" placeholder="Username to whielist">
                 <div><i class="fa-solid fa-circle-plus fa-xl" style="color: var(--accent-color-light);"></i></div>
             </div>
         </div>
+    </div>
+
+    <div class="content">
+        <h2 class="contentTitle">Console</h2>
+        <hr class="consoleDivider">
+        <pre id="consoleOutput">
+        </pre>
+        <hr class="consoleDivider">
+        <input type="text" class="inputField consoleInput" placeholder="Enter command..."> 
+        <button>Send</button>
     </div>
 </body>
 </html>
