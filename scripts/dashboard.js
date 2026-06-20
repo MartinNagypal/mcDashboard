@@ -11,6 +11,19 @@ function main() {
         fetch("https://n8n.martin04lel.space/webhook/toggleServer");
         getServerStatus();
     });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            const usernameInput = document.getElementById("usernameInput");
+            const commandInput = document.getElementById("commandInput");
+            if (document.activeElement === usernameInput) {
+                addWhitelist();
+            }
+            else if (document.activeElement === commandInput) {
+                sendCommand();
+            }
+        }
+    })
 }
 
 function getServerStatus() {
@@ -67,7 +80,6 @@ function fetchConsoleOutput() {
         .then(data => {
             const consoleOutput = document.getElementById("consoleOutput");
             consoleOutput.textContent = data.console;
-            console.log(data.console);
         })
         .catch(error => {
             console.error("Error fetching console output:", error);
@@ -90,8 +102,9 @@ function removeIndicatorClasses(){
 }
 
 function sendCommand() {
-    const commandInput = document.querySelector(".consoleInput");
+    const commandInput = document.getElementById("commandInput");
     const command = commandInput.value;
+    console.log(command);
 
     fetch("https://n8n.martin04lel.space/webhook/sendCommand", {
         method: "POST",
@@ -110,4 +123,10 @@ function sendCommand() {
     fetchConsoleOutput();
     commandInput.value = "";
 
+}
+
+function addWhitelist() {
+    const usernameInput = document.getElementById("usernameInput");
+    console.log(usernameInput.value);
+    usernameInput.value = "";
 }
