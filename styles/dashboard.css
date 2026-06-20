@@ -190,3 +190,32 @@ body{
         font-size: 0.6em;
     }
 }
+
+.fa-spinner {
+    animation: spinner 2s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#consoleSendButton{
+    padding: 10px;
+    width: 15%;
+    margin-bottom: 10px;
+    border-style: none;
+    border-radius: 15px;
+    background: var(--secondary-accent-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    transition: all 0.1s ease-in-out;
+}
+
+#consoleSendButton:active{
+    transform: scale(0.9);
+}
