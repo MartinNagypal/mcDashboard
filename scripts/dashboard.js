@@ -1,8 +1,10 @@
 const startstop = document.getElementById("startstop");
 
-getServerStatus();
 main();
-fetchConsoleOutput();
+setInterval(() => {
+    fetchConsoleOutput();
+    getServerStatus();
+}, 2000);
 
 function main() {
     startstop.addEventListener("click", () => {

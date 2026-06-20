@@ -174,7 +174,7 @@ body{
 
 #consoleOutput{
     font-family: 'Courier New', Courier, monospace;
-    line-height: 1.8;
+    line-height: 2;
     max-height: 400px;
     overflow: scroll;
     width: 80%;
