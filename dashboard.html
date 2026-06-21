@@ -26,11 +26,11 @@
                     <div class="actionButtonText">Start/Stop</div>
                     <div><i class="fa-solid fa-hourglass fa-lg" id="startstopIcon" style="color: rgb(192, 192, 192);"></i></div>
                 </span>
-                <span class="actionButton">
+                <span class="actionButton" id="restartButton">
                     <div class="actionButtonText">Restart</div>
                     <div><i class="fa-solid fa-rotate" style="color: var(--secondary-accent-color);"></i></div>
                 </span>
-                <span class="actionButton">
+                <span class="actionButton" id="backupButton">
                     <div class="actionButtonText">Backup</div>
                     <div><i class="fa-solid fa-save" style="color: var(--secondary-accent-color);"></i></div>
                 </span>
@@ -38,8 +38,9 @@
             <div id="whitelist">
                 <div>Enter username</div>
                 <input type="text" class="inputField" id="usernameInput" placeholder="Username to whitelist">
-                <div><i class="fa-solid fa-circle-plus fa-xl" style="color: var(--accent-color-light);"></i></div>
+                <div id="whitelistSend"><i class="fa-solid fa-circle-plus fa-xl" style="color: var(--accent-color-light);"></i></div>
             </div>
+            <pre class="output outputHidden"></pre>
         </div>
     </div>
 

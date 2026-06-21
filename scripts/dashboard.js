@@ -1,4 +1,6 @@
 const startstop = document.getElementById("startstop");
+const whitelistSend = document.getElementById("whitelistSend");
+const restartButton = document.getElementById("restartButton");
 
 main();
 setInterval(() => {
@@ -6,11 +8,31 @@ setInterval(() => {
     getServerStatus();
 }, 2000);
 
-function main() {
-    startstop.addEventListener("click", () => {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function main() {
+    startstop.addEventListener("click", async () => {
         fetch("https://n8n.martin04lel.space/webhook/toggleServer");
         getServerStatus();
+        const output = document.querySelector(".output");
+        output.textContent = "Toggling server...";
+        output.classList.remove("outputHidden");
+        await sleep(2000);
+        output.classList.add("outputHidden");
     });
+
+    restartButton.addEventListener("click", async () => {
+        const output = document.querySelector(".output");
+        fetch("https://n8n.martin04lel.space/webhook/restartServer")
+            .then(response => response.json())
+            .then(data => output.textContent = data.output);
+        await sleep(1500);
+        output.classList.remove("outputHidden");
+        await sleep(2000);
+        output.classList.add("outputHidden");
+    })
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -24,6 +46,10 @@ function main() {
             }
         }
     })
+
+    whitelistSend.addEventListener("click", () => {
+        addWhitelist();
+    });
 }
 
 function getServerStatus() {
@@ -125,8 +151,30 @@ function sendCommand() {
 
 }
 
-function addWhitelist() {
+async function addWhitelist() {
     const usernameInput = document.getElementById("usernameInput");
     console.log(usernameInput.value);
+    const output = document.querySelector(".output");
+    output.textContent = "Adding " + usernameInput.value + " to whitelist...";
+    output.classList.remove("outputHidden");
+    await sleep(1000);
+    fetch("https://n8n.martin04lel.space/webhook/addWhitelist", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username: usernameInput.value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        output.textContent = data.output;
+    })
+    .catch(error => {
+        console.error("Error adding username to whitelist:", error);
+    });
+
+    await sleep(2000);
+    output.classList.add("outputHidden");
     usernameInput.value = "";
 }
+
