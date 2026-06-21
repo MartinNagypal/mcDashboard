@@ -10,7 +10,6 @@
 
 body{
     background: var(--secondary-color);
-    height: 1200px;
     color: var(--primary-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
