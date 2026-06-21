@@ -244,3 +244,25 @@ body{
     padding:0 !important;
     margin:0 !important;
 }
+
+#logoutButton{
+    background: var(--secondary-color-light);
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: var(--primary-color);
+    font-size: 1em;
+    transition: all 0.15s ease-in-out;
+}
+
+#logoutButton:active{
+    transform: scale(0.9);
+}
+
+@media (max-width: 600px) {
+    #logoutButton{
+        padding: 5px;
+        font-size: 0.75em;
+    }
+}

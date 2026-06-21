@@ -2,6 +2,7 @@ const startstop = document.getElementById("startstop");
 const whitelistSend = document.getElementById("whitelistSend");
 const restartButton = document.getElementById("restartButton");
 
+checkAuth();
 main();
 setInterval(() => {
     fetchConsoleOutput();
@@ -14,7 +15,11 @@ function sleep(ms) {
 
 async function main() {
     startstop.addEventListener("click", async () => {
-        fetch("https://n8n.martin04lel.space/webhook/toggleServer");
+        fetch("https://n8n.martin04lel.space/webhook/toggleServer", {
+            method: "GET",
+            credentials: "include"
+         }
+        );
         getServerStatus();
         const output = document.querySelector(".output");
         output.textContent = "Toggling server...";
@@ -25,7 +30,10 @@ async function main() {
 
     restartButton.addEventListener("click", async () => {
         const output = document.querySelector(".output");
-        fetch("https://n8n.martin04lel.space/webhook/restartServer")
+        fetch("https://n8n.martin04lel.space/webhook/restartServer", {
+            method: "GET",
+            credentials: "include"
+         })
             .then(response => response.json())
             .then(data => output.textContent = data.output);
         await sleep(1500);
@@ -53,7 +61,10 @@ async function main() {
 }
 
 function getServerStatus() {
-    fetch("https://n8n.martin04lel.space/webhook/serverStatus")
+    fetch("https://n8n.martin04lel.space/webhook/serverStatus", {
+        method: "GET",
+        credentials: "include"
+    })
         .then(response => response.json())
         .then(data => {
             const statusIdicator = document.getElementById("statusIndicator");
@@ -101,7 +112,10 @@ function getServerStatus() {
 }
 
 function fetchConsoleOutput() {
-    fetch("https://n8n.martin04lel.space/webhook/getConsole")
+    fetch("https://n8n.martin04lel.space/webhook/getConsole", {
+        method: "GET",
+        credentials: "include"
+    })
         .then(response => response.json())
         .then(data => {
             const consoleOutput = document.getElementById("consoleOutput");
@@ -134,6 +148,7 @@ function sendCommand() {
 
     fetch("https://n8n.martin04lel.space/webhook/sendCommand", {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -160,6 +175,7 @@ async function addWhitelist() {
     await sleep(1000);
     fetch("https://n8n.martin04lel.space/webhook/addWhitelist", {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -176,5 +192,41 @@ async function addWhitelist() {
     await sleep(2000);
     output.classList.add("outputHidden");
     usernameInput.value = "";
+}
+
+function logout() {
+    console.log("Logging out...");
+    fetch("https://n8n.martin04lel.space/webhook/logout", {
+        method: "GET",
+        credentials: "include"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.logout) {
+            window.location.href = "login.html";
+        } else {
+            console.error("Logout failed:", data);
+        }
+    })
+    .catch(error => {
+        console.error("Error during logout:", error);
+    });
+}
+
+function checkAuth() {
+    fetch("https://n8n.martin04lel.space/webhook/checkAuth", {
+    method: "GET",
+    credentials: "include"
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.authenticated);
+        if(data.authenticated === "false"){
+            window.location.href = "login.html";
+        }
+    })
+    .catch(error => {
+        console.error("Error checking authentication:", error);
+    });
 }
 

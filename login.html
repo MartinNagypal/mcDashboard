@@ -8,11 +8,11 @@
     <script src="./scripts/login.js" defer></script>
 </head>
 <body>
-    <div id="loginContainer">
+    <div id="loginContainer" class="loginContainer hidden">
         <h2>Login</h2>
         <input type="text" id="usernameInput" class="inputField" placeholder="Enter username">
         <input type="password" id="passwordInput" class="inputField" placeholder="Enter password">
-        <button id="loginButton">Login</button>
+        <button id="loginButton" onclick="login()">Login</button>
         <p id="errorMessage"></p>
 </body>
 </html>

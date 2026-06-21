@@ -56,3 +56,15 @@ body{
     cursor: pointer;
     box-shadow: 0 0 5px 1px var(--accent-color);
 }
+
+.hidden{
+    opacity: 0 !important;
+    transform: scale(0.75) !important;
+    pointer-events: none !important;
+}
+
+.loginContainer{
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.3s ease;
+}
