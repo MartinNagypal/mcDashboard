@@ -2,15 +2,28 @@ const startstop = document.getElementById("startstop");
 const whitelistSend = document.getElementById("whitelistSend");
 const restartButton = document.getElementById("restartButton");
 
-checkAuth();
-main();
-setInterval(() => {
-    fetchConsoleOutput();
+
+init();
+setInterval(async () => {
+    await getConsoleOutput();
     getServerStatus();
-}, 2000);
+}, 3000);
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function init() {
+    await checkAuth();
+    main();
+
+    getServerStatus();
+    getConsoleOutput();
+
+    setInterval(async () => {
+        await getConsoleOutput();
+        getServerStatus();
+    }, 3000);
 }
 
 async function main() {
@@ -59,7 +72,9 @@ async function main() {
         addWhitelist();
     });
 }
+//functions 
 
+//check server Status
 function getServerStatus() {
     fetch("https://n8n.martin04lel.space/webhook/serverStatus", {
         method: "GET",
@@ -111,21 +126,50 @@ function getServerStatus() {
         });
 }
 
-function fetchConsoleOutput() {
-    fetch("https://n8n.martin04lel.space/webhook/getConsole", {
-        method: "GET",
-        credentials: "include"
-    })
-        .then(response => response.json())
-        .then(data => {
-            const consoleOutput = document.getElementById("consoleOutput");
-            consoleOutput.textContent = data.console;
-        })
-        .catch(error => {
-            console.error("Error fetching console output:", error);
+//get console output
+async function getConsoleOutput() {
+    const output = document.getElementById("consoleOutput");
+    try{
+        const response = await fetch("https://n8n.martin04lel.space/webhook/getConsole", {
+            method: "GET",
+            credentials: "include"
         });
+
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        const data = await response.json();
+        output.textContent = data.console;
+        return true;
+    } catch(error) {
+        console.error("Error fetching console output:", error);
+        output.textContent = "Error fetching console output";
+        return false;
+    }
 }
 
+//send command from input field to server
+async function sendCommand() {
+    const commandInput = document.getElementById("commandInput");
+    const command = commandInput.value
+    try{
+        const response = await fetch("https://n8n.martin04lel.space/webhook/sendCommand", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ command })
+        });       
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        commandInput.value = "";
+    } catch(error) {
+        console.error("Error sending command:", error);
+        return;
+    }
+
+}
+
+
+//removes all indicator classes from the status indicator and startstop icon, used before adding new classes to prevent class stacking
 function removeIndicatorClasses(){
     const startstopIcon = document.getElementById("startstopIcon");
     startstopIcon.classList.remove("fa-hourglass");
@@ -141,31 +185,48 @@ function removeIndicatorClasses(){
     statusIdicator.classList.remove("fa-circle-xmark");
 }
 
-function sendCommand() {
-    const commandInput = document.getElementById("commandInput");
-    const command = commandInput.value;
-    console.log(command);
 
-    fetch("https://n8n.martin04lel.space/webhook/sendCommand", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ command })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Command sent successfully:", data);
-    })
-    .catch(error => {
-        console.error("Error sending command:", error);
-    });
-    fetchConsoleOutput();
-    commandInput.value = "";
-
+//check if session is valid, if not redirect to login page
+async function checkAuth() {
+    try {
+        const response = await fetch("https://n8n.martin04lel.space/webhook/checkAuth", {
+            method: "GET",
+            credentials: "include"
+        });
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        const data = await response.json();
+        if(data.authenticated === "false"){
+            window.location.href = "login.html";
+        }
+    } catch(error) {
+        console.error("Error checking authentication:", error);
+    }
 }
 
+//Logout Button
+async function logout(){
+    try{
+        const response = await fetch("https://n8n.martin04lel.space/webhook/logout", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        const data = await response.json();
+        if (data.logout) {
+            window.location.href = "login.html";
+        } else {
+            console.error("Logout failed:", data);
+        }
+    }catch(error) {
+        console.error("Error during logout:", error);
+        return;
+    }
+}
+
+//add whitelist functiom
 async function addWhitelist() {
     const usernameInput = document.getElementById("usernameInput");
     console.log(usernameInput.value);
@@ -192,41 +253,5 @@ async function addWhitelist() {
     await sleep(2000);
     output.classList.add("outputHidden");
     usernameInput.value = "";
-}
-
-function logout() {
-    console.log("Logging out...");
-    fetch("https://n8n.martin04lel.space/webhook/logout", {
-        method: "GET",
-        credentials: "include"
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.logout) {
-            window.location.href = "login.html";
-        } else {
-            console.error("Logout failed:", data);
-        }
-    })
-    .catch(error => {
-        console.error("Error during logout:", error);
-    });
-}
-
-function checkAuth() {
-    fetch("https://n8n.martin04lel.space/webhook/checkAuth", {
-    method: "GET",
-    credentials: "include"
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.authenticated);
-        if(data.authenticated === "false"){
-            window.location.href = "login.html";
-        }
-    })
-    .catch(error => {
-        console.error("Error checking authentication:", error);
-    });
 }
 

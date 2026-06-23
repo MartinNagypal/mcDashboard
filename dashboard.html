@@ -36,11 +36,13 @@
                     <div><i class="fa-solid fa-save" style="color: var(--secondary-accent-color);"></i></div>
                 </span>
             </div>
+            <!--
             <div id="whitelist">
                 <div>Enter username</div>
                 <input type="text" class="inputField" id="usernameInput" placeholder="Username to whitelist">
                 <div id="whitelistSend"><i class="fa-solid fa-circle-plus fa-xl" style="color: var(--accent-color-light);"></i></div>
             </div>
+            -->
             <pre class="output outputHidden"></pre>
         </div>
     </div>
@@ -48,11 +50,12 @@
     <div class="content">
         <h2 class="contentTitle">Console</h2>
         <hr class="consoleDivider">
-        <pre id="consoleOutput">
+        <pre id="consoleOutput" ">
         </pre>
         <hr class="consoleDivider">
         <input type="text" class="inputField consoleInput" id="commandInput" placeholder="Enter command..."> 
         <button onclick="sendCommand()" id="consoleSendButton">Send</button>
+        
     </div>
 </body>
 </html>
