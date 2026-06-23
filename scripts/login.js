@@ -1,6 +1,10 @@
 window.onload = checkAuth;
 main();
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function main() {
     document.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
