@@ -4,10 +4,6 @@ const restartButton = document.getElementById("restartButton");
 
 
 init();
-setInterval(async () => {
-    await getConsoleOutput();
-    getServerStatus();
-}, 3000);
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -17,23 +13,23 @@ async function init() {
     await checkAuth();
     main();
 
-    getServerStatus();
-    getConsoleOutput();
+    await getServerStatus();
+    await getConsoleOutput();
 
-    setInterval(async () => {
+    while(true) {
+        await getServerStatus();
         await getConsoleOutput();
-        getServerStatus();
-    }, 3000);
+    }
 }
 
 async function main() {
     startstop.addEventListener("click", async () => {
-        fetch("https://n8n.martin04lel.space/webhook/toggleServer", {
+        const response = await fetch("https://n8n.martin04lel.space/webhook/toggleServer", {
             method: "GET",
             credentials: "include"
-         }
-        );
-        getServerStatus();
+         });
+        
+        await getServerStatus();
         const output = document.querySelector(".output");
         output.textContent = "Toggling server...";
         output.classList.remove("outputHidden");
@@ -43,12 +39,13 @@ async function main() {
 
     restartButton.addEventListener("click", async () => {
         const output = document.querySelector(".output");
-        fetch("https://n8n.martin04lel.space/webhook/restartServer", {
+        const response = await fetch("https://n8n.martin04lel.space/webhook/restartServer", {
             method: "GET",
             credentials: "include"
-         })
-            .then(response => response.json())
-            .then(data => output.textContent = data.output);
+        });
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        const data = await response.json();
+        output.textContent = data.output;
         await sleep(1500);
         output.classList.remove("outputHidden");
         await sleep(2000);
@@ -75,55 +72,56 @@ async function main() {
 //functions 
 
 //check server Status
-function getServerStatus() {
-    fetch("https://n8n.martin04lel.space/webhook/serverStatus", {
-        method: "GET",
-        credentials: "include"
-    })
-        .then(response => response.json())
-        .then(data => {
-            const statusIdicator = document.getElementById("statusIndicator");
-            const statusText = document.getElementById("statusText");
-            const startstop = document.getElementById("startstop");
-            const startstopIcon = document.getElementById("startstopIcon");
-            
-            if(data.status === "online") {
-                statusText.textContent = "online"
-                statusIdicator.innerHTML = '<i class="fa-solid fa-circle-check" style="color: rgb(99, 230, 190);"></i>';
-                removeIndicatorClasses();
-                startstopIcon.classList.add("fa-toggle-on");
-                startstopIcon.style.color = "rgb(99, 230, 190)";
-            }
-            else if(data.status === "starting") {
-                statusText.textContent = "starting"
-                statusIdicator.innerHTML = '<i class="fa-solid fa-spinner" style="color: rgb(255, 205, 86);"></i>';
-                removeIndicatorClasses();
-                startstopIcon.classList.add("fa-spinner");
-                startstopIcon.style.color = "rgb(243, 126, 0)";
-            }
-            else if(data.status === "unhealthy") {
-                statusText.textContent = "ERROR: Unhealthy"
-                statusIdicator.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: rgb(255, 38, 0);"></i>';
-                removeIndicatorClasses();
-                startstopIcon.classList.remove("fa-spinner");
-                startstopIcon.classList.add("fa-triangle-exclamation");
-                startstopIcon.style.color = "rgb(255, 38, 0)";
-            }
-            else {
-                statusText.textContent = "offline"
-                statusIdicator.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: rgb(255, 99, 132);"></i>';
-                removeIndicatorClasses();
-                startstopIcon.classList.add("fa-toggle-off");
-                startstopIcon.style.color = "rgb(255, 99, 132)";
-            }
-        })
-        .catch(error => {
+async function getServerStatus() {
+    try {
+        const response = await fetch("https://n8n.martin04lel.space/webhook/serverStatus", {
+            method: "GET",
+            credentials: "include"
+        });
+        if (!response.ok) throw new Error("Network response was not ok " + response.status);
+        const data = await response.json();
+        const statusIdicator = document.getElementById("statusIndicator");
+        const statusText = document.getElementById("statusText");
+        const startstop = document.getElementById("startstop");
+        const startstopIcon = document.getElementById("startstopIcon");
+        if(data.status === "online") {
+            statusText.textContent = "online"
+            statusIdicator.innerHTML = '<i class="fa-solid fa-circle-check" style="color: rgb(99, 230, 190);"></i>';
+            removeIndicatorClasses();
+            startstopIcon.classList.add("fa-toggle-on");
+            startstopIcon.style.color = "rgb(99, 230, 190)";
+        }
+        else if(data.status === "starting") {
+            statusText.textContent = "starting"
+            statusIdicator.innerHTML = '<i class="fa-solid fa-spinner" style="color: rgb(255, 205, 86);"></i>';
+            removeIndicatorClasses();
+            startstopIcon.classList.add("fa-spinner");
+            startstopIcon.style.color = "rgb(243, 126, 0)";
+        }
+        else if(data.status === "unhealthy") {
+            statusText.textContent = "ERROR: Unhealthy"
+            statusIdicator.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: rgb(255, 38, 0);"></i>';
+            removeIndicatorClasses();
+            startstopIcon.classList.remove("fa-spinner");
+            startstopIcon.classList.add("fa-triangle-exclamation");
+            startstopIcon.style.color = "rgb(255, 38, 0)";
+        }
+        else {
+            statusText.textContent = "offline"
+            statusIdicator.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: rgb(255, 99, 132);"></i>';
+            removeIndicatorClasses();
+            startstopIcon.classList.add("fa-toggle-off");
+            startstopIcon.style.color = "rgb(255, 99, 132)";
+        }
+
+
+    } catch (error) {
             console.error("Error fetching server status:", error);
             const statusIdicator = document.getElementById("statusIndicator");
             const statusText = document.getElementById("statusText");
             statusText.textContent = "error fetching status";
             statusIdicator.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: rgb(255, 205, 86);"></i>';
-        });
+    }
 }
 
 //get console output
@@ -161,6 +159,7 @@ async function sendCommand() {
         });       
         if (!response.ok) throw new Error("Network response was not ok " + response.status);
         commandInput.value = "";
+        await getConsoleOutput();
     } catch(error) {
         console.error("Error sending command:", error);
         return;
@@ -229,7 +228,6 @@ async function logout(){
 //add whitelist functiom
 async function addWhitelist() {
     const usernameInput = document.getElementById("usernameInput");
-    console.log(usernameInput.value);
     const output = document.querySelector(".output");
     output.textContent = "Adding " + usernameInput.value + " to whitelist...";
     output.classList.remove("outputHidden");

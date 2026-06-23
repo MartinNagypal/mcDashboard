@@ -4,7 +4,6 @@ main();
 function main() {
     document.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
-            console.log("Enter key pressed");
             login();
         }
     });
@@ -17,7 +16,6 @@ function checkAuth() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.authenticated);
         if (data.authenticated === "true") {
             window.location.href = "dashboard.html";
         }
