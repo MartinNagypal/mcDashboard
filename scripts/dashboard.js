@@ -2,7 +2,6 @@ const startstop = document.getElementById("startstop");
 const whitelistSend = document.getElementById("whitelistSend");
 const restartButton = document.getElementById("restartButton");
 
-
 init();
 
 function sleep(ms) {
