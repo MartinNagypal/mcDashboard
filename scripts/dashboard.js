@@ -1,23 +1,20 @@
 const startstop = document.getElementById("startstop");
 const whitelistSend = document.getElementById("whitelistSend");
 const restartButton = document.getElementById("restartButton");
-const firstRun = true;
+let firstRun = true;
 
-await firstRunCheck();
 init();
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function firstRunCheck() {
-    if(firstRun) {
-        await sleep(3000);
-        await checkAuth();
-    }
-}
-
 async function init() {
+    if(firstRun) {
+        firstRun = false;
+        await sleep(2000);
+    }
+
     await checkAuth();
     main();
 
