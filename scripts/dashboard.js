@@ -29,32 +29,32 @@ async function init() {
 
 async function main() {
     startstop.addEventListener("click", async () => {
+        const output = document.querySelector(".output");
+        output.textContent = "Toggling server...";
+        output.classList.remove("outputHidden");
+        await sleep(2000);
+        output.classList.add("outputHidden");
         const response = await fetch("https://n8n.martin04lel.space/webhook/toggleServer", {
             method: "GET",
             credentials: "include"
          });
         
         await getServerStatus();
-        const output = document.querySelector(".output");
-        output.textContent = "Toggling server...";
-        output.classList.remove("outputHidden");
-        await sleep(2000);
-        output.classList.add("outputHidden");
     });
 
     restartButton.addEventListener("click", async () => {
         const output = document.querySelector(".output");
+        output.textContent = "Restarting server...";
+        output.classList.remove("outputHidden");
+        await sleep(2000);
+        output.classList.add("outputHidden");
         const response = await fetch("https://n8n.martin04lel.space/webhook/restartServer", {
+
             method: "GET",
             credentials: "include"
         });
         if (!response.ok) throw new Error("Network response was not ok " + response.status);
         const data = await response.json();
-        output.textContent = data.output;
-        await sleep(1500);
-        output.classList.remove("outputHidden");
-        await sleep(2000);
-        output.classList.add("outputHidden");
     })
 
     document.addEventListener("keydown", (event) => {
@@ -153,6 +153,7 @@ async function getConsoleOutput() {
 async function sendCommand() {
     const commandInput = document.getElementById("commandInput");
     const command = commandInput.value
+    commandInput.value = " "; 
     try{
         const response = await fetch("https://n8n.martin04lel.space/webhook/sendCommand", {
             method: "POST",
