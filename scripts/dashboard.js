@@ -161,9 +161,9 @@ async function sendCommand() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ command })
-        });       
+        });    
+        commandInput.value = " ";   
         if (!response.ok) throw new Error("Network response was not ok " + response.status);
-        commandInput.value = "";
         await getConsoleOutput();
     } catch(error) {
         console.error("Error sending command:", error);
