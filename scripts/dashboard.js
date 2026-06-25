@@ -29,11 +29,7 @@ async function init() {
 
 async function main() {
     startstop.addEventListener("click", async () => {
-        const output = document.querySelector(".output");
-        output.textContent = "Toggling server...";
-        output.classList.remove("outputHidden");
-        await sleep(2000);
-        output.classList.add("outputHidden");
+        displayAction("Toggling server...");
         const response = await fetch("https://n8n.martin04lel.space/webhook/toggleServer", {
             method: "GET",
             credentials: "include"
@@ -43,11 +39,7 @@ async function main() {
     });
 
     restartButton.addEventListener("click", async () => {
-        const output = document.querySelector(".output");
-        output.textContent = "Restarting server...";
-        output.classList.remove("outputHidden");
-        await sleep(2000);
-        output.classList.add("outputHidden");
+        displayAction("Restarting server...");
         const response = await fetch("https://n8n.martin04lel.space/webhook/restartServer", {
 
             method: "GET",
@@ -257,5 +249,14 @@ async function addWhitelist() {
     await sleep(2000);
     output.classList.add("outputHidden");
     usernameInput.value = "";
+}
+
+//display action message for 2,5s
+async function displayAction(message) {
+    output = document.getElementById("actionOutput");
+    output.textContent = message;
+    output.classList.remove("outputHidden");
+    await sleep(2500);
+    output.classList.add("outputHidden");
 }
 
