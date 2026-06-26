@@ -268,9 +268,11 @@ async function getServerStats(){
         const ramUsage = document.getElementById("ramUsage");
         const cpuTemp = document.getElementById("cpuTemperature");
         const onlinePlayers = document.getElementById("onlinePlayers");
+        const uptime = document.getElementById("uptime");
         onlinePlayers.textContent = data.playerCount;
         cpuTemp.textContent = data.temp + " °C";
         ramUsage.textContent = data.mem + " / " + data.maxmem;
+        uptime.textContent = data.uptime;
     } catch (error) {
         console.error("Error fetching server stats:", error);
     }
