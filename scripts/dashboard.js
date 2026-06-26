@@ -3,8 +3,8 @@ const whitelistSend = document.getElementById("whitelistSend");
 const restartButton = document.getElementById("restartButton");
 let firstRun = true;
 
+getServerStats();
 init();
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -258,5 +258,21 @@ async function displayAction(message) {
     output.classList.remove("outputHidden");
     await sleep(2500);
     output.classList.add("outputHidden");
+}
+
+async function getServerStats(){
+    try {
+        const response = await fetch("https://n8n.martin04lel.space/webhook-test/serverStats")
+        const data = await response.json();
+
+        const ramUsage = document.getElementById("ramUsage");
+        const cpuTemp = document.getElementById("cpuTemperature");
+        const onlinePlayers = document.getElementById("onlinePlayers");
+        onlinePlayers.textContent = data.playerCount;
+        cpuTemp.textContent = data.temp + " °C";
+        ramUsage.textContent = data.mem + " / " + data.maxmem;
+    } catch (error) {
+        console.error("Error fetching server stats:", error);
+    }
 }
 
